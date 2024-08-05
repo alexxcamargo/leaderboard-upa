@@ -22,7 +22,7 @@ interface Adolescent {
   providedIn: 'root'
 })
 export class GamificationService {
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = 'http://localhost:7545';
 
   constructor(private http: HttpClient) { }
 
