@@ -1,0 +1,36 @@
+<div class="container">
+    <h2>Adicionar Adolescente</h2>
+    <form (submit)="addAdolescent()" class="form">
+      <div class="form-group">
+        <label for="name">Nome:</label>
+        <input id="name" [(ngModel)]="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="birthdate">Data de Nascimento:</label>
+        <input id="birthdate" type="date" [(ngModel)]="birthdate" name="birthdate" required>
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="loading">Adicionar Adolescente</button>
+    </form>
+  
+    <h2>Adolescentes</h2>
+    <div class="form-group">
+      <label for="filter">Filtrar por Nome:</label>
+      <input id="filter" [(ngModel)]="filterText" name="filterText" placeholder="Digite um nome para filtrar" class="filter-input">
+    </div>
+    <ul class="adolescent-list">
+      <li *ngFor="let adolescent of filteredAdolescents()" class="adolescent-item">
+        <div class="adolescent-info">
+          <span>{{ adolescent.name }} - {{ adolescent.points }} pontos</span>
+        </div>
+        <div class="adolescent-actions">
+          <input type="date" [(ngModel)]="adolescent.presenceDate" class="presence-date-input" required>
+          <button class="btn btn-green" (click)="addPresencePoints(adolescent)" [disabled]="loading">Adicionar Pontos de Presença</button>
+        </div>
+        <div class="adolescent-actions">
+          <input type="number" [(ngModel)]="adolescent.correctAnswersInput" placeholder="Respostas Corretas" min="1" class="correct-answers-input">
+          <button class="btn btn-yellow" (click)="addCorrectAnswerPoints(adolescent)" [disabled]="loading">Adicionar Pontos por Respostas Corretas</button>
+        </div>
+      </li>
+    </ul>
+  </div>
+  

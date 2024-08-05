@@ -1,0 +1,26 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("DATABASE_URL_LOCAL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Adolescent {
+  id             Int        @id @default(autoincrement())
+  name           String
+  birthdate      DateTime
+  points         Int        @default(0)
+  presences      Int        @default(0)
+  correctAnswers Int        @default(0)
+  presenceLogs   Presence[]
+}
+
+model Presence {
+  id             Int        @id @default(autoincrement())
+  date           DateTime   @default(now())
+  adolescentId   Int
+  adolescent     Adolescent @relation(fields: [adolescentId], references: [id])
+}
