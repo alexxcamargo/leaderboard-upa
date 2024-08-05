@@ -26,4 +26,13 @@ export class LeaderboardComponent implements OnInit {
       this.adolescents = data;
     });
   }
+
+  getPositionClass(index: number): string {
+    switch (index) {
+      case 0: return 'first';
+      case 1: return 'second';
+      case 2: return 'third';
+      default: return '';
+    }
+  }
 }

@@ -5,11 +5,11 @@
       <h3>Válido Até 28-10-2024</h3>
     </div>
     <ul class="leaderboard-list">
-      <li *ngFor="let adolescent of adolescents; let i = index" [ngClass]="'position-' + (i + 1)">
-        <span class="rank">{{ i + 1 }}</span>
-        <span class="name">{{ adolescent.name }}</span>
-        <span class="points">{{ adolescent.points }}</span>
-      </li>
-    </ul>
+        <li *ngFor="let adolescent of adolescents; let i = index" [ngClass]="getPositionClass(i)">
+          <span class="rank">{{ i + 1 }}</span>
+          <span class="name">{{ adolescent.name }}</span>
+          <span class="points">{{ adolescent.points }}</span>
+        </li>
+      </ul>
   </div>
   
