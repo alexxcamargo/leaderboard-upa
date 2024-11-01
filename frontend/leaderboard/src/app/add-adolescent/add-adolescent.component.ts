@@ -54,9 +54,21 @@ export class AddAdolescentComponent implements OnInit {
   addPresencePoints(adolescent: Adolescent) {
     if (adolescent.presenceDate) {
       this.loading = true;
-      this.gamificationService.registerPresence(adolescent.id, adolescent.presenceDate).subscribe(() => {
-        this.loadAdolescents();
-        setTimeout(() => this.loading = false, 2000);
+      this.gamificationService.registerPresence(adolescent.id, adolescent.presenceDate).subscribe({
+        next: (response) => {
+          // Sucesso: resposta recebida com sucesso
+          this.loadAdolescents();
+          setTimeout(() => this.loading = false, 2000);
+        },
+        error: (error) => {
+          // Erro: trata diferentes tipos de erro com base no status ou mensagem
+          if (error.status === 400 && error.error?.error === 'Presença já registrada para esta data.') {
+            alert('A presença já foi registrada para esta data.');
+          } else {
+            alert('Ocorreu um erro ao registrar a presença. Tente novamente mais tarde.');
+          }
+          this.loading = false;
+        }
       });
     }
   }
