@@ -10,29 +10,48 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.post('/registerPresence', async (req, res) => {
-    const { adolescentId, date } = req.body;
-    try {
-      const presenceDate = new Date(date);
-      const dayOfWeek = presenceDate.getUTCDay(); // 0 é domingo, 6 é sábado
-      const points = dayOfWeek === 0 ? 60 : 40;
-  
-      const adolescent = await prisma.adolescent.update({
-        where: { id: adolescentId },
-        data: {
-          presences: { increment: 1 },
-          points: { increment: points },
-          presenceLogs: {
-            create: { date: presenceDate }
-          }
+  const { adolescentId, date } = req.body;
+  try {
+    // Normaliza a data para o início do dia (sem considerar horas)
+    const presenceDate = new Date(date);
+    presenceDate.setUTCHours(0, 0, 0, 0);
+
+    // Verifica se já existe uma presença registrada para o adolescente nessa data
+    const existingPresence = await prisma.presence.findFirst({
+      where: {
+        adolescentId: adolescentId,
+        date: {
+          equals: presenceDate, // Considera apenas a data normalizada
         },
-        include: { presenceLogs: true }
-      });
-      res.json(adolescent);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'An error occurred while registering presence.' });
+      },
+    });
+
+    if (existingPresence) {
+      return res.status(400).json({ error: 'Presença já registrada para esta data.' });
     }
-  });
+
+    const dayOfWeek = presenceDate.getUTCDay(); // 0 é domingo, 6 é sábado
+    const points = dayOfWeek === 0 ? 60 : 40;
+
+    const adolescent = await prisma.adolescent.update({
+      where: { id: adolescentId },
+      data: {
+        presences: { increment: 1 },
+        points: { increment: points },
+        presenceLogs: {
+          create: { date: presenceDate }
+        }
+      },
+      include: { presenceLogs: true }
+    });
+
+    res.json(adolescent);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while registering presence.' });
+  }
+});
+
   
   app.post('/registerCorrectAnswer', async (req, res) => {
     const { adolescentId, correctAnswers } = req.body;
