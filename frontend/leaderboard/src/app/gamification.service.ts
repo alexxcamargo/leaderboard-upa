@@ -22,7 +22,8 @@ interface Adolescent {
   providedIn: 'root'
 })
 export class GamificationService {
-  private apiUrl = 'http://217.196.62.103:7545';
+  private apiUrl = 'https://apileaderboard.walkerstech.com.br/';
+  //private apiUrl = 'http://localhost:7845';
 
   constructor(private http: HttpClient) { }
 
